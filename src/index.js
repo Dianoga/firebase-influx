@@ -58,21 +58,23 @@ class Manager {
 		const data = snapshot.val();
 		const time = new Date();
 
+		const tags = {};
+		const fields = {
+			time: time
+		};
+
 		_.each(data, val => {
-			const tags = {
-				id: val.id,
-				name: val.name
-			};
-
-			const fields = {
-				time: time,
-				watts: Number.parseFloat(val.watts)
-			};
-
-			this.influx.writePoint('power', fields, tags, err => {
-				if (err) console.error(err);
-			});
+			const key = this.nameToField(val.name);
+			fields[key] = Number.parseFloat(val.watts);
 		});
+
+		this.influx.writePoint('power', fields, tags, err => {
+			if (err) console.error(err);
+		});
+	}
+
+	nameToField(name) {
+		return name.replace(/ /g, '\\ ').replace(/,/g, '\\,');
 	}
 }
 
