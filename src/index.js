@@ -44,9 +44,11 @@ class Manager {
 				if (tagKeys.indexOf(key) === -1) {
 					fields[key] = isNaN(test) ? attr : test.valueOf();
 				} else {
-					tags[key] = isNaN(test) ? attr : test.valueOf();
+					tags[key] = key === 'type' ? attr.toString() : attr;
 				}
 			});
+
+			// console.log(fields, tags);
 
 			this.influx.writePoint('devices', fields, tags, err => {
 				if (err) console.error(err);
