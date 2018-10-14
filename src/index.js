@@ -77,7 +77,8 @@ class Manager {
 
 	handlePower(snapshot) {
 		const data = snapshot.val();
-		// const time = new Date();
+
+		if (!data) return;
 
 		const tags = {};
 		const fields = {};
